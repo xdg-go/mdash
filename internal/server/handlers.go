@@ -92,12 +92,13 @@ func (s *Server) serveDirectory(w http.ResponseWriter, r *http.Request, fsPath, 
 	// Add parent directory link if not at root
 	if urlPath != "" {
 		parent := filepath.Dir(urlPath)
-		if parent == "." {
-			parent = ""
+		parentPath := "/"
+		if parent != "." {
+			parentPath = parent
 		}
 		dirEntries = append(dirEntries, DirEntry{
 			Name:  "..",
-			Path:  "/" + parent,
+			Path:  parentPath,
 			IsDir: true,
 		})
 	}
@@ -107,16 +108,19 @@ func (s *Server) serveDirectory(w http.ResponseWriter, r *http.Request, fsPath, 
 		if strings.HasPrefix(entry.Name(), ".") {
 			continue
 		}
+		if !strings.HasSuffix(entry.Name(), ".md") && !entry.IsDir() {
+			continue
+		}
 
-		entryPath := urlPath
-		if entryPath != "" {
-			entryPath += "/"
+		entryPath := "/"
+		if urlPath != "" {
+			entryPath = urlPath + "/"
 		}
 		entryPath += entry.Name()
 
 		dirEntries = append(dirEntries, DirEntry{
 			Name:  entry.Name(),
-			Path:  "/" + entryPath,
+			Path:  entryPath,
 			IsDir: entry.IsDir(),
 		})
 	}
