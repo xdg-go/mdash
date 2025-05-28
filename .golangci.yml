@@ -1,0 +1,87 @@
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters-settings:
+  gofumpt:
+    # Use gofumpt instead of gofmt
+    extra-rules: true
+
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment # too noisy for this project
+
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+    disabled-checks:
+      - unnamedResult # allow unnamed results for short functions
+
+  revive:
+    rules:
+      - name: error-naming
+      - name: error-strings
+      - name: error-return
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+        arguments:
+          - maxLength: 2
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+        arguments: ["%w"] # prefer %w for error wrapping
+      - name: empty-block
+      - name: superfluous-else
+      - name: unused-parameter
+      - name: unreachable-code
+      - name: redefines-builtin-id
+
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    - gofumpt
+    - gocritic
+    - revive
+    - gocyclo
+    - goimports
+    - misspell
+    - unparam
+    - unconvert
+    - goconst
+    - asciicheck
+    - bodyclose
+    - copyloopvar
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - noctx
+    - rowserrcheck
+    - sqlclosecheck
+    - whitespace
+
+issues:
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - gosec
+        - goconst

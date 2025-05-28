@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - mdash</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📁 {{.Title}}</h1>
+            {{if .Path}}<p class="breadcrumb">Path: /{{.Path}}</p>{{end}}
+        </header>
+
+        <main>
+            <ul class="file-list">
+                {{range .Entries}}
+                <li class="{{if .IsDir}}directory{{else}}file{{end}}">
+                    <a href="{{.Path}}">
+                        {{if .IsDir}}📁{{else}}📄{{end}} {{.Name}}
+                    </a>
+                </li>
+                {{end}}
+            </ul>
+        </main>
+
+        <footer>
+            <p>Served by <strong>mdash</strong></p>
+        </footer>
+    </div>
+</body>
+</html>
