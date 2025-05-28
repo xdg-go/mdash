@@ -20,6 +20,9 @@ go install github.com/xdg-go/mdash@latest
 
 ## Usage
 
+If an `index.md` file exists in a directory, it will be served instead of a
+directory listing.
+
 ```bash
 # Serve current directory on port 3000
 mdash

@@ -73,6 +73,14 @@ func (s *Server) handleRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) serveDirectory(w http.ResponseWriter, r *http.Request, fsPath, urlPath string) {
+	// Check if index.md exists in this directory
+	indexPath := filepath.Join(fsPath, "index.md")
+	if info, err := os.Stat(indexPath); err == nil && !info.IsDir() {
+		// Serve index.md instead of directory listing
+		s.serveMarkdown(w, r, indexPath, urlPath)
+		return
+	}
+
 	entries, err := os.ReadDir(fsPath)
 	if err != nil {
 		http.Error(w, "Cannot read directory", http.StatusInternalServerError)
