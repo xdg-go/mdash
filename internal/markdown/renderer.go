@@ -21,15 +21,12 @@ func New() *Renderer {
 	md := goldmark.New(
 		goldmark.WithExtensions(
 			extension.GFM,
-			extension.Table,
-			extension.Strikethrough,
-			extension.TaskList,
+			extension.Footnote,
 		),
 		goldmark.WithParserOptions(
 			parser.WithAutoHeadingID(),
 		),
 		goldmark.WithRendererOptions(
-			html.WithHardWraps(),
 			html.WithXHTML(),
 			html.WithUnsafe(),
 		),
