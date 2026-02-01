@@ -3,15 +3,17 @@ package markdown
 import (
 	"bytes"
 
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer/html"
 )
 
-// Renderer wraps goldmark markdown parser
+// Renderer wraps goldmark markdown parser with HTML sanitization
 type Renderer struct {
-	md goldmark.Markdown
+	md     goldmark.Markdown
+	policy *bluemonday.Policy
 }
 
 // New creates a new markdown renderer with common extensions
@@ -29,17 +31,21 @@ func New() *Renderer {
 		goldmark.WithRendererOptions(
 			html.WithHardWraps(),
 			html.WithXHTML(),
+			html.WithUnsafe(),
 		),
 	)
 
-	return &Renderer{md: md}
+	// UGCPolicy allows GitHub-compatible HTML tags while blocking scripts
+	policy := bluemonday.UGCPolicy()
+
+	return &Renderer{md: md, policy: policy}
 }
 
-// Render converts markdown to HTML
+// Render converts markdown to HTML with sanitization
 func (r *Renderer) Render(source []byte) ([]byte, error) {
 	var buf bytes.Buffer
 	if err := r.md.Convert(source, &buf); err != nil {
 		return nil, err
 	}
-	return buf.Bytes(), nil
+	return r.policy.SanitizeBytes(buf.Bytes()), nil
 }
