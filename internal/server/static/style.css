@@ -188,6 +188,11 @@ header h1 {
 }
 
 /* Task lists */
+.markdown-content li:has(> input[type="checkbox"]) {
+    list-style: none;
+    margin-left: -1.5rem;
+}
+
 .markdown-content input[type="checkbox"] {
     margin-right: 0.5rem;
 }

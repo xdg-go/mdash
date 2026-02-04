@@ -2,6 +2,7 @@ package markdown
 
 import (
 	"bytes"
+	"regexp"
 
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/yuin/goldmark"
@@ -34,6 +35,12 @@ func New() *Renderer {
 
 	// UGCPolicy allows GitHub-compatible HTML tags while blocking scripts
 	policy := bluemonday.UGCPolicy()
+
+	// Allow checkbox inputs rendered by goldmark's task list extension
+	policy.AllowAttrs("type").
+		Matching(regexp.MustCompile(`(?i)^checkbox$`)).
+		OnElements("input")
+	policy.AllowAttrs("checked", "disabled").OnElements("input")
 
 	return &Renderer{md: md, policy: policy}
 }
