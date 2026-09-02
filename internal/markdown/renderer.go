@@ -35,6 +35,9 @@ func New() *Renderer {
 
 	// UGCPolicy allows GitHub-compatible HTML tags while blocking scripts
 	policy := bluemonday.UGCPolicy()
+	// UGCPolicy drops <ol start>, which silently renumbers lists that begin
+	// at 0 (or any value but 1). Goldmark emits it per CommonMark; keep it.
+	policy.AllowAttrs("start").Matching(bluemonday.Integer).OnElements("ol")
 
 	// Allow checkbox inputs rendered by goldmark's task list extension
 	policy.AllowAttrs("type").

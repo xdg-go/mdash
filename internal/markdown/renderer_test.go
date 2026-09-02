@@ -32,3 +32,15 @@ func TestRender_TaskList(t *testing.T) {
 		t.Errorf("expected checked attribute in output, got:\n%s", html)
 	}
 }
+
+// A list starting at 0 must keep its numbering; the sanitizer used to strip
+// the start attribute goldmark emits.
+func TestRenderKeepsOrderedListStart(t *testing.T) {
+	out, err := New().Render([]byte("0. zero\n1. one\n"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(out), `<ol start="0">`) {
+		t.Errorf("start attribute dropped:\n%s", out)
+	}
+}
