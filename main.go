@@ -46,7 +46,7 @@ func main() {
 		IdleTimeout:  60 * time.Second,
 	}
 
-	fmt.Printf("Starting mdash serving %s on http://localhost:%d/\n", *dir, ln.Addr().(*net.TCPAddr).Port)
+	fmt.Printf("Starting mdash serving %s on http://localhost:%d/ ...\n", *dir, ln.Addr().(*net.TCPAddr).Port)
 	log.Fatal(httpServer.Serve(ln))
 }
 
