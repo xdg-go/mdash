@@ -8,10 +8,14 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/xdg-go/mdash/internal/server"
 )
+
+// listenHost restricts the server to local connections only.
+const listenHost = "127.0.0.1"
 
 func main() {
 	var (
@@ -29,7 +33,7 @@ func main() {
 	var ln net.Listener
 	var err error
 	if *port != "" {
-		ln, err = net.Listen("tcp", ":"+*port)
+		ln, err = net.Listen("tcp", net.JoinHostPort(listenHost, *port))
 	} else {
 		ln, err = listenOnAvailablePort(3000, 3999)
 	}
@@ -58,7 +62,7 @@ func listenOnAvailablePort(minPort, maxPort int) (net.Listener, error) {
 
 	for i := range rangeSize {
 		port := minPort + (start+i)%rangeSize
-		ln, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+		ln, err := net.Listen("tcp", net.JoinHostPort(listenHost, strconv.Itoa(port)))
 		if err == nil {
 			return ln, nil
 		}
